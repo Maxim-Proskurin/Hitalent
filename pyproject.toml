@@ -1,7 +1,7 @@
 [project]
 name = "hitalent"
 version = "0.1.0"
-description = ""
+description = "API-сервис для вопросов и ответов"
 authors = [
     {name = "Максим Проскурин",email = "maxipsk@yandex.ru"}
 ]
