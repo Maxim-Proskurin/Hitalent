@@ -10,11 +10,11 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y build-essential curl && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && pip install "poetry~=1.8"
+RUN pip install --upgrade pip && pip install "poetry~=2.1.1"
 
 # сначала метаданные для кэша
 COPY pyproject.toml poetry.lock* ./
-RUN poetry install --only main --no-interaction --no-ansi
+RUN poetry install --only main --no-interaction --no-ansi --no-root
 
 # затем весь проект (включая alembic, app)
 COPY . .
