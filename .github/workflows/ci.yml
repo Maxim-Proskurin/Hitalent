@@ -33,8 +33,6 @@ jobs:
           poetry lock --no-cache
           poetry install
 
-      # .env НЕ создаём — тесты самодостаточные благодаря conftest.py
-
       - name: Ruff
         run: poetry run ruff check .
 
@@ -47,11 +45,12 @@ jobs:
       - name: Mypy
         run: poetry run mypy app
 
-      - name: Pytest (unit only)
-        run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+      - name: Pytest (unit only) with coverage
+        run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app --cov-report=xml
+      - uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: Maxim-Proskurin/Hitalent
+          files: ./coverage.xml
+          flags: unit
+          name: codecov-coverage
+          fail_ci_if_error: true
+          verbose: true
