@@ -3,8 +3,8 @@ name = "hitalent"
 version = "0.1.0"
 description = "API-сервис для вопросов и ответов"
 readme = "README.md"
-authors = [{ name = "Максим Проскурин", email = "maxipsk@yandex.ru" }]
 requires-python = ">=3.12"
+authors = [{ name = "Максим Проскурин", email = "maxipsk@yandex.ru" }]
 dependencies = [
     "fastapi>=0.116.1,<0.117.0",
     "uvicorn>=0.35.0,<0.36.0",
@@ -19,7 +19,7 @@ dependencies = [
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# Где лежит код-пакет (это остаётся в tool.poetry)
+# Где лежит код пакета
 [tool.poetry]
 packages = [{ include = "app", from = "." }]
 
