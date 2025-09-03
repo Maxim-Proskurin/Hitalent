@@ -2,6 +2,8 @@
 ORM-модели: Вопрос и ответ.
 """
 
+from __future__ import annotations
+
 from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, func
@@ -15,7 +17,7 @@ class Base(DeclarativeBase):
 
 
 class Question(Base):
-    """Модель Вопроса."""
+    """Модель «Вопрос»: текст и время создания."""
 
     __tablename__ = "question"
 
@@ -38,14 +40,16 @@ class Question(Base):
 
 
 class Answer(Base):
-    """Модель ответа."""
+    """Модель «Ответ», привязанная к вопросу."""
 
     __tablename__ = "answers"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    question_id: Mapped[str] = mapped_column(
+    question_id: Mapped[int] = mapped_column(
+        Integer,
         ForeignKey("question.id", ondelete="CASCADE"),
         index=True,
+        nullable=False,
     )
     user_id: Mapped[str] = mapped_column(String(36), index=True)
     text: Mapped[str] = mapped_column(Text, nullable=False)

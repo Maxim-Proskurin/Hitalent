@@ -1,12 +1,14 @@
 """
-Pydantic-схемы для валидации данных в API.
+Pydantic-схемы и минимальные проверки данных на входе/выходе.
 """
+
+from __future__ import annotations
 
 from datetime import datetime
 from typing import List
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class QuestionBase(BaseModel):
@@ -44,7 +46,7 @@ class AnswerBase(BaseModel):
     @classmethod
     def text_not_empty(cls, v: str) -> str:
         """Не допустить пустой текст ответа."""
-        if not v or v.strip():
+        if not v or not v.strip():
             raise ValueError("Текст не должен быть пустым")
         return v.strip()
 
@@ -68,4 +70,4 @@ class AnswerRead(AnswerBase):
 class QuestionWithAnswers(QuestionRead):
     """Вопрос вместе со списком ответов."""
 
-    answers: List[AnswerRead] = []
+    answers: List[AnswerRead] = Field(default_factory=list)

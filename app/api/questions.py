@@ -1,111 +1,78 @@
-"""
-Маршруты по вопросам и добавлению ответов к ним.
-"""
+"""Эндпоинты для «вопросов»: создать, список, получить, удалить."""
 
-from typing import List, Literal, Optional
+from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+import logging
+from typing import Literal
+
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import asc, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
+from app import schemas
 from app.db import get_session
-from app.models import Answer, Question
-from app.schemas import AnswerCreate, AnswerRead, QuestionCreate, QuestionRead, QuestionWithAnswers
+from app.models import Question
 
-router = APIRouter(prefix="/questions", tags=["questions"])
+logger = logging.getLogger(__name__)
+router = APIRouter(prefix="/questions", tags=["Вопросы"])
 
 
-@router.get("/", response_model=List[QuestionRead])
+@router.post("/", response_model=schemas.QuestionRead, status_code=status.HTTP_201_CREATED)
+async def create_question(
+    payload: schemas.QuestionCreate, session: AsyncSession = Depends(get_session)
+):
+    """Создать новый вопрос."""
+    q = Question(text=payload.text)
+    session.add(q)
+    await session.flush()
+    await session.commit()
+    await session.refresh(q)
+    logger.info("Создан вопрос id=%s", q.id)
+    return schemas.QuestionRead.model_validate(q.__dict__)
+
+
+@router.get("/", response_model=list[schemas.QuestionRead])
 async def list_questions(
     response: Response,
+    limit: int = 20,
+    offset: int = 0,
+    sort_by: Literal["id", "created_at"] = "id",
+    order: Literal["asc", "desc"] = "asc",
     session: AsyncSession = Depends(get_session),
-    limit: int = Query(20, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    sort_by: Literal["id", "created_at"] = Query("id"),
-    order: Literal["asc", "desc"] = Query("asc"),
-    q: Optional[str] = Query(None),
-) -> List[QuestionRead]:
+):
+    """Список вопросов с пагинацией и сортировкой.
+
+    В заголовок ответа кладём общее количество (ASCII-безопасное имя).
     """
-    Вернуть список вопросов.
+    total = (await session.execute(select(func.count(Question.id)))).scalar_one()
+    response.headers["X-Total-Count"] = str(total)
 
-    - limit, offset управляют пагинацией
-    - sort_by, order управляют сортировкой
-    - q фильтрует по подстроке в тексте
-    - заголовок X-Общее-Количество содержит общее количество записей по фильтру
-    """
-    # считаем общее количество по текущему фильтру
-    count_stmt = select(func.count()).select_from(Question)
-    if q:
-        count_stmt = count_stmt.where(Question.text.contains(q))
-    total = (await session.execute(count_stmt)).scalar_one()
-    response.headers["X-Общее-Количество"] = str(total)
+    order_by_col = Question.id if sort_by == "id" else Question.created_at
+    order_expr = asc(order_by_col) if order == "asc" else desc(order_by_col)
 
-    # основная выборка
-    stmt = select(Question)
-    if q:
-        stmt = stmt.where(Question.text.contains(q))
-
-    order_col = getattr(Question, sort_by)
-    stmt = stmt.order_by(asc(order_col) if order == "asc" else desc(order_col))
-    stmt = stmt.limit(limit).offset(offset)
-
-    result = await session.execute(stmt)
-    return list(result.scalars().all)
+    res = await session.execute(select(Question).order_by(order_expr).limit(limit).offset(offset))
+    items = res.scalars().all()
+    return [schemas.QuestionRead.model_validate(i.__dict__) for i in items]
 
 
-@router.post("/", response_model=QuestionRead, status_code=status.HTTP_201_CREATED)
-async def create_question(
-    payload: QuestionCreate, session: AsyncSession = Depends(get_session)
-) -> QuestionRead:
-    """Создать новый вопрос."""
-    item = Question(text=payload.text)
-    session.add(item)
-    await session.commit()
-    await session.refresh(item)
-    return item
-
-
-@router.get("/{question_id}", response_model=QuestionWithAnswers)
-async def get_question(
-    question_id: int, session: AsyncSession = Depends(get_session)
-) -> QuestionWithAnswers:
-    """Вернуть один вопрос вместе с его ответами."""
-    result = await session.execute(
-        select(Question).options(selectinload(Question.answers)).where(Question.id == question_id)
-    )
-    item = result.scalar_one_or_none()
-    if not item:
-        raise HTTPException(status_code=404, detail="Вопрос не найден.")
-    return item
+@router.get("/{question_id}", response_model=schemas.QuestionRead)
+async def get_question(question_id: int, session: AsyncSession = Depends(get_session)):
+    """Получить вопрос по id."""
+    res = await session.execute(select(Question).where(Question.id == question_id))
+    obj = res.scalar_one_or_none()
+    if not obj:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Вопрос не найден")
+    return schemas.QuestionRead.model_validate(obj.__dict__)
 
 
 @router.delete("/{question_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_question(question_id: int, session: AsyncSession = Depends(get_session)) -> None:
-    """Удалить вопрос. Связанные ответы удаляются каскадом."""
-    item = await session.get(Question, question_id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Вопрос не найден.")
-    await session.delete(item)
+async def delete_question(question_id: int, session: AsyncSession = Depends(get_session)):
+    """Удалить вопрос (ответы удаляются каскадом)."""
+    res = await session.execute(select(Question).where(Question.id == question_id))
+    obj = res.scalar_one_or_none()
+    if not obj:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Вопрос не найден")
+    await session.delete(obj)
     await session.commit()
-    return None
-
-
-@router.post(
-    "/{question_id}/answers/",
-    response_model=AnswerRead,
-    status_code=status.HTTP_201_CREATED,
-)
-async def add_answer_to_question(
-    question_id: int, payload: AnswerCreate, session: AsyncSession = Depends(get_session)
-) -> AnswerRead:
-    """Добавить ответ к существующему вопросу. Если Вопрос не найден. - 404."""
-    qobj = await session.get(Question, question_id)
-    if not qobj:
-        raise HTTPException(status_code=404, detail="Вопрос не найден.")
-
-    ans = Answer(question_id=question_id, user_id=str(payload.user_id), text=payload.text)
-    session.add(ans)
-    await session.commit()
-    await session.refresh(ans)
-    return ans
+    logger.info("Удалён вопрос id=%s", question_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

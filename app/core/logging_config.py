@@ -1,13 +1,13 @@
-"""
-Простая настройка логов.
-"""
+"""Минимальная конфигурация логирования."""
 
-import logging as py_logging
+from __future__ import annotations
+
+import logging
 
 
 def configure_logging() -> None:
-    """Включает базовую конфигурацию логирования."""
-    py_logging.basicConfig(
-        level=py_logging.INFO,
+    """Включает структурированное логирование."""
+    logging.basicConfig(
+        level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
