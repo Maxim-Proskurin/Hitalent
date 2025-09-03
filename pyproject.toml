@@ -2,26 +2,26 @@
 name = "hitalent"
 version = "0.1.0"
 description = "API-сервис для вопросов и ответов"
-authors = [
-    {name = "Максим Проскурин",email = "maxipsk@yandex.ru"}
-]
-packages = [{ include = "app" }]
 readme = "README.md"
+authors = [{ name = "Максим Проскурин", email = "maxipsk@yandex.ru" }]
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi (>=0.116.1,<0.117.0)",
-    "uvicorn (>=0.35.0,<0.36.0)",
-    "sqlalchemy[asyncio] (>=2.0.43,<3.0.0)",
-    "asyncpg (>=0.30.0,<0.31.0)",
-    "alembic (>=1.16.5,<2.0.0)",
-    "pydantic-settings (>=2.10.1,<3.0.0)",
-    "psycopg[binary] (>=3.2.9,<4.0.0)"
+    "fastapi>=0.116.1,<0.117.0",
+    "uvicorn>=0.35.0,<0.36.0",
+    "sqlalchemy[asyncio]>=2.0.43,<3.0.0",
+    "asyncpg>=0.30.0,<0.31.0",
+    "alembic>=1.16.5,<2.0.0",
+    "pydantic-settings>=2.10.1,<3.0.0",
+    "psycopg[binary]>=3.2.9,<4.0.0",
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# Где лежит код-пакет (это остаётся в tool.poetry)
+[tool.poetry]
+packages = [{ include = "app", from = "." }]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
@@ -37,7 +37,6 @@ pytest-cov = "^6.2.1"
 anyio = "^4.10.0"
 aiosqlite = "^0.21.0"
 
-
 [tool.black]
 line-length = 100
 target-version = ["py312"]
@@ -47,12 +46,10 @@ exclude = '''
 )
 '''
 
-
 [tool.isort]
 profile = "black"
 line_length = 100
 src_paths = ["app", "tests"]
-
 
 [tool.ruff]
 line-length = 100
@@ -61,8 +58,6 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F"]
 ignore = ["E501"]
-
-
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
@@ -77,4 +72,3 @@ disallow_untyped_defs = false
 check_untyped_defs = true
 ignore_missing_imports = true
 exclude = "alembic/.*"
-
