@@ -19,8 +19,12 @@ dependencies = [
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# Где лежит код пакета
+
 [tool.poetry]
+name = "hitalent"
+version = "0.1.0"
+description = "API-сервис для вопросов и ответов"
+authors = ["Максим Проскурин <maxipsk@yandex.ru>"]
 packages = [{ include = "app", from = "." }]
 
 [tool.poetry.group.dev.dependencies]
