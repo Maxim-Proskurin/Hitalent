@@ -49,3 +49,9 @@ jobs:
 
       - name: Pytest (unit only)
         run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Maxim-Proskurin/Hitalent

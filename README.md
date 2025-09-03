@@ -7,6 +7,7 @@
 ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
 ![Ruff](https://img.shields.io/badge/linter-ruff-ff2b2b.svg)
 ![mypy](https://img.shields.io/badge/types-mypy-2A6DB3.svg)
+[![CI](https://github.com/Maxim-Proskurin/Hitalent/actions/workflows/ci.yml/badge.svg)](https://github.com/Maxim-Proskurin/Hitalent/actions/workflows/ci.yml)
 
 ## Реализовано
 
