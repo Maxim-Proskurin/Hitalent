@@ -8,6 +8,7 @@
 ![Ruff](https://img.shields.io/badge/linter-ruff-ff2b2b.svg)
 ![mypy](https://img.shields.io/badge/types-mypy-2A6DB3.svg)
 [![CI](https://github.com/Maxim-Proskurin/Hitalent/actions/workflows/ci.yml/badge.svg)](https://github.com/Maxim-Proskurin/Hitalent/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Maxim-Proskurin/Hitalent/branch/main/graph/badge.svg)](https://codecov.io/gh/Maxim-Proskurin/Hitalent)
 
 ## Реализовано
 
