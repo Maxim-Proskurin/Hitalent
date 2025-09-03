@@ -1,5 +1,13 @@
 # Этот проект - решение тестового задания на позицию Junior Python разработчика в компанию Хайталент. Задача: реализовать сервис «Вопросы / Ответы» с использованием FastAPI + PostgreSQL + Alembic + Docker, покрыть тестами и подготовить документацию
 
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+![Poetry](https://img.shields.io/badge/poetry-1.x-60A5FA.svg)
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
+![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
+![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
+![Ruff](https://img.shields.io/badge/linter-ruff-ff2b2b.svg)
+![mypy](https://img.shields.io/badge/types-mypy-2A6DB3.svg)
+
 ## Реализовано
 
 - CRUD для вопросов и ответов.
@@ -128,4 +136,3 @@ poetry run pre-commit install
 - Миграции.
 - Линтинг + типы.
 - CI-pipeline.
-  
