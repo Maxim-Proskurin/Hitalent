@@ -142,5 +142,5 @@ poetry run pre-commit install
 Максим Проскурин
 
 **Способы Связи**
-[![💬 Написать в Telegram](https://img.shields.io/badge/💬-Telegram-26A5E4?style=flat&logo=telegram&logoColor=white)](https://t.me/Tyler_not_Durden)
+[![💬 Написать в Telegram](https://img.shields.io/badge/💬-Telegram-26A5E4?style=flat&logo=telegram&logoColor=white)](https://t.me/woolwerine)
 [![📧 Написать письмо](https://img.shields.io/badge/📧_Написать-D14836?style=flat&logo=gmail&logoColor=white)](https://mail.yandex.ru/compose?mailto=Maxiprsk@yandex.ru)

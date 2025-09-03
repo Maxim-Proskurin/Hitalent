@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from collections.abc import AsyncGenerator
 
 import pytest
@@ -8,9 +9,19 @@ import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from app.db import get_session as prod_get_session
+from app.db import get_session
 from app.main import app
 from app.models import Base
+
+os.environ.setdefault("ENV", "local")
+os.environ.setdefault("APP_NAME", "hitalent")
+os.environ.setdefault("POSTGRES_USER", "postgres")
+os.environ.setdefault("POSTGRES_PASSWORD", "test")
+os.environ.setdefault("POSTGRES_DB", "hitalent_test")
+os.environ.setdefault("POSTGRES_HOST_LOCAL", "127.0.0.1")
+os.environ.setdefault("POSTGRES_PORT_LOCAL", "5432")
+os.environ.setdefault("POSTGRES_HOST_DOCKER", "db")
+os.environ.setdefault("POSTGRES_PORT_DOCKER", "5432")
 
 
 @pytest.fixture(scope="session")
@@ -76,11 +87,11 @@ async def override_session_dependency(session_maker):
         async with session_maker() as session:
             yield session
 
-    app.dependency_overrides[prod_get_session] = _get_session_override
+    app.dependency_overrides[get_session] = _get_session_override
     try:
         yield
     finally:
-        app.dependency_overrides.pop(prod_get_session, None)
+        app.dependency_overrides.pop(get_session, None)
 
 
 @pytest_asyncio.fixture

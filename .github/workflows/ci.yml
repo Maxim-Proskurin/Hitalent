@@ -4,39 +4,48 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
-  lint-test:
+  lint_and_test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      - name: Cache Poetry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.cache/pip
+          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
       - name: Install Poetry
-        run: pip install poetry
+        run: pipx install poetry==1.8.3
 
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+      - name: Install deps
+        run: |
+          poetry lock --no-cache
+          poetry install
 
-      
-      - name: Ruff (lint)
+      # .env НЕ создаём — тесты самодостаточные благодаря conftest.py
+
+      - name: Ruff
         run: poetry run ruff check .
 
       - name: Black (check)
-        run: poetry run black --check --diff .
+        run: poetry run black --check .
 
       - name: Isort (check)
-        run: poetry run isort --check-only --diff .
+        run: poetry run isort --check-only .
 
-      - name: Mypy (type-check)
-        run: poetry run mypy app tests
+      - name: Mypy
+        run: poetry run mypy app
 
-      - name: Run pytest
+      - name: Pytest (unit only)
         run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app
