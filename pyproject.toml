@@ -5,6 +5,7 @@ description = "API-сервис для вопросов и ответов"
 authors = [
     {name = "Максим Проскурин",email = "maxipsk@yandex.ru"}
 ]
+packages = [{ include = "app" }]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

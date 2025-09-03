@@ -1,7 +1,7 @@
 # Этот проект - решение тестового задания на позицию Junior Python разработчика в компанию Хайталент. Задача: реализовать сервис «Вопросы / Ответы» с использованием FastAPI + PostgreSQL + Alembic + Docker, покрыть тестами и подготовить документацию
 
 ![Python](https://img.shields.io/badge/python-3.12-blue.svg)
-![Poetry](https://img.shields.io/badge/poetry-1.x-60A5FA.svg)
+![Poetry](https://img.shields.io/badge/poetry-2.1.3-60A5FA.svg)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 ![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
 ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
@@ -31,18 +31,19 @@
 ### Структура
 
 app/
-  api/              # эндпоинты (questions, answers)
-  core/             # конфиги (logging, settings)
-  db.py             # подключение к БД
-  main.py           # FastAPI-приложение
-  models.py         # SQLAlchemy модели
-  schemas.py        # Pydantic-схемы
-alembic/            # миграции
-tests/              # тесты + фикстуры
-docker-compose.yml  # запуск в контейнерах
-Dockerfile
-pyproject.toml
-.env.example        # пример заполнения env
+
+- api/              # эндпоинты (questions, answers)
+- core/             # конфиги (logging, settings)
+- db.py             # подключение к БД
+- main.py           # FastAPI-приложение
+- models.py         # SQLAlchemy модели
+- schemas.py        # Pydantic-схемы
+- alembic/            # миграции
+- tests/              # тесты + фикстуры
+- docker-compose.yml  # запуск в контейнерах
+- Dockerfile
+- pyproject.toml
+- .env.example        # пример заполнения env
 
 ### Запуск
 
@@ -136,3 +137,10 @@ poetry run pre-commit install
 - Миграции.
 - Линтинг + типы.
 - CI-pipeline.
+
+**Автор**
+Максим Проскурин
+
+**Способы Связи**
+[![💬 Написать в Telegram](https://img.shields.io/badge/💬-Telegram-26A5E4?style=flat&logo=telegram&logoColor=white)](https://t.me/Tyler_not_Durden)
+[![📧 Написать письмо](https://img.shields.io/badge/📧_Написать-D14836?style=flat&logo=gmail&logoColor=white)](https://mail.yandex.ru/compose?mailto=Maxiprsk@yandex.ru)

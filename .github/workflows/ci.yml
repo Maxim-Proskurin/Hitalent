@@ -32,4 +32,4 @@ jobs:
           poetry run mypy .
 
       - name: Run tests
-        run: poetry run pytest --cov=app --cov-report=term-missing
+        run: poetry run python -m pytest --cov=app --cov-report=term-missing
