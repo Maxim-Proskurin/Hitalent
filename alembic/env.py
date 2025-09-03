@@ -3,6 +3,7 @@
 Alembic использует настройки из .env (через Settings) и применяет миграции.
 """
 import asyncio
+import sys
 from logging.config import fileConfig
 
 from alembic import context  # type: ignore[attr-defined]
@@ -52,6 +53,14 @@ async def run_migrations_online() -> None:
 
     await connectable.dispose()
 
+def is_revision_command() -> bool:
+    """Определяю, что запущена команда 'revision' (есть флаг autogenerate)."""
+    cmd_opts = getattr(config, "cmd_opts", None)
+    return bool(cmd_opts and getattr(cmd_opts, "autogenerate", False))
+
+if is_revision_command():
+    run_migrations_offline()
+    sys.exit(0)
 
 if context.is_offline_mode():
     run_migrations_offline()

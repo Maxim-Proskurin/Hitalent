@@ -1,10 +1,30 @@
-.git
-.venv
-__pycache__
+# Python
+__pycache__/
 *.pyc
-.mypy_cache
-.pytest_cache
+*.pyo
+*.pyd
+*.log
+alembic/versions/
+
+# Virtual env
+poetry.lock
+.venv/
 .env
 .env.*
+
+# MyPy / Pytest / Coverage
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Ruff, Black, isort
+.ruff_cache/
+.cache/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
 .DS_Store
-*.lock
+Thumbs.db

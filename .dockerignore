@@ -1,9 +1,26 @@
-.git
-.venv
-__pycache__
+# Python cache
+__pycache__/
 *.pyc
-.mypy_cache
-.pytest_cache
+*.pyo
+*.pyd
+
+# Venv
+.venv/
+poetry.lock
+
+# Dev configs
 .env
 .env.*
+
+# Tests & coverage
+tests/
+.coverage
+htmlcov/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
 .DS_Store
+Thumbs.db
+poetry.lock
