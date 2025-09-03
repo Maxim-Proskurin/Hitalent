@@ -1,20 +1,22 @@
 exclude: |
   (?x)^(
-    alembic/.*     
+    alembic/.*
   )$
 repos:
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 25.1.0
     hooks:
       - id: black
+        args: ["--check", "--diff"]
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
+        args: ["--check-only", "--diff"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.9
+    rev: v0.5.0  
     hooks:
       - id: ruff
         args: ["--fix"]
@@ -23,8 +25,8 @@ repos:
     rev: v1.10.0
     hooks:
       - id: mypy
-        additional_dependencies: ["pydantic>=2.6"]
-        args: ["--config-file=pyproject.toml"]
-
+        additional_dependencies:
+          - pydantic>=2
+          - pydantic-settings>=2
 
 

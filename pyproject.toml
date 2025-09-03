@@ -72,3 +72,8 @@ disallow_untyped_defs = false
 check_untyped_defs = true
 ignore_missing_imports = true
 exclude = "alembic/.*"
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+warn_required_dynamic_aliases = true

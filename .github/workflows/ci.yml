@@ -2,19 +2,20 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  build:
+  lint-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -22,14 +23,20 @@ jobs:
         run: pip install poetry
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --no-interaction --no-root
 
-      - name: Run linters
-        run: |
-          poetry run ruff check .
-          poetry run black --check .
-          poetry run isort --check-only .
-          poetry run mypy .
+      
+      - name: Ruff (lint)
+        run: poetry run ruff check .
 
-      - name: Run tests
-        run: poetry run python -m pytest --cov=app --cov-report=term-missing
+      - name: Black (check)
+        run: poetry run black --check --diff .
+
+      - name: Isort (check)
+        run: poetry run isort --check-only --diff .
+
+      - name: Mypy (type-check)
+        run: poetry run mypy app tests
+
+      - name: Run pytest
+        run: poetry run pytest --maxfail=1 --disable-warnings -q --cov=app

@@ -77,7 +77,8 @@ class Settings(BaseSettings):
     def DATABASE_URL_SYNC(self) -> str:
         """Синхронный DSN (для Alembic)."""
         return (
-            f"postgresql+psycopg://{self._q(self.postgres_user)}:{self._q(self.postgres_password)}"
+            "postgresql+psycopg://"
+            f"{self._q(self.postgres_user)}:{self._q(self.postgres_password)}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
         )
 
@@ -85,7 +86,8 @@ class Settings(BaseSettings):
     def DATABASE_URL_ASYNC(self) -> str:
         """Асинхронный DSN (для приложения)."""
         return (
-            f"postgresql+asyncpg://{self._q(self.postgres_user)}:{self._q(self.postgres_password)}"
+            "postgresql+asyncpg://"
+            f"{self._q(self.postgres_user)}:{self._q(self.postgres_password)}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
         )
 
